@@ -5,6 +5,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ASCIILevelLoader : MonoBehaviour
 {
@@ -107,7 +108,8 @@ public class ASCIILevelLoader : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.instance.inFight == false && gameStarted == false)
+        Debug.Log(CurrentLevel);
+        if (gameStarted == false)
         {
             LoadLevel();
             gameStarted = true;

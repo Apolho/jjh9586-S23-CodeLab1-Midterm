@@ -26,17 +26,6 @@ public class StartScreenManager : MonoBehaviour
         character2.SetActive(false);
         character3.SetActive(false);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void StartGame()
     {

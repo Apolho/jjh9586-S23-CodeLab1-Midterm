@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     public static float speed;
 
-    private int health;
+    public static float health;
 
     public static int strength;
 
@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
 
     public static bool reload = false;
     
+   
+
+    
     
     
     
@@ -32,28 +35,29 @@ public class Player : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         
+        //will find the game manager
         gameManager = GameObject.Find("GameManager");
 
-        switch (hero)
+        switch (hero) //will check if the hero string equals any of these
         {
-            case "sHero":
+            case "sHero": //if == shero, then is will call the square function
                 SquareHero();
                 break;
-            case "cHero":
+            case "cHero": //will call the circle function
                 CircleHero();
                 break;
-            case "tHero":
+            case "tHero": //will call the triangle function
                 TriangleHero();
                 break;
         }
         
-        Debug.Log(hero);
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        //WASD controller. Adds force to corresponding vector with the speed of the hero
         if (Input.GetKey(KeyCode.W))
         {
             rb.AddForce(speed * Vector2.up);
@@ -74,20 +78,25 @@ public class Player : MonoBehaviour
             rb.AddForce(speed * Vector2.right);
         }
 
-        rb.velocity *= 0.09f;
+        rb.velocity *= 0.09f; //will slow down the velocity so it doesn't go on forever
 
-        if (Input.GetMouseButtonDown(0) && reload == false)
+        if (Input.GetMouseButtonDown(0) && reload == false) //when pressing the left mouse button and if reload is false
         {
-            reload = true;
-            Attack();
+            reload = true; //will set reload to true, not allowing this to be done again
+            Attack(); //will call the attack function
         }
 
-        if (health <= 0)
+        if (health <= 0 || GameManager.instance.gameEnd >= 2) //if the player goes under the health threshold or game end reaches 2, they will go to the Game Over screen
         {
             SceneManager.LoadScene("GameOver");
         }
+        
+     
+       
+        
     }
 
+    //next few functions set the stats to the corresponding heroes. different health stats, different strength stats, and different speeds
     void SquareHero()
     {
         speed = 10f;
@@ -110,22 +119,24 @@ public class Player : MonoBehaviour
         strength = 15;
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionEnter2D(Collision2D col) 
     {
-        if (col.gameObject.name.Contains("Door"))
+        if (col.gameObject.name.Contains("Door")) //if it collides with the door
         {
-            Debug.Log("Collided");
-            gameManager.GetComponent<ASCIILevelLoader>().LevelChange();
+            GameManager.instance.gameEnd++; //when player hits door, it adds one to gameEnd in game manager
+            gameManager.GetComponent<ASCIILevelLoader>().LevelChange(); //calls the ASCII level loader and changes the level
+            
         }
     }
 
     public void Attack()
     {
-        GameObject newWeapon = Instantiate(weapon);
+        GameObject newWeapon = Instantiate(weapon); //instantiates a new game object
 
         
-        newWeapon.transform.position = gameObject.transform.position;
-        newWeapon.transform.rotation = new Quaternion(Input.mousePosition.x, Input.mousePosition.y, 0, 0).normalized;
+        newWeapon.transform.position = gameObject.transform.position; //instantiates it on the location of the player
+        newWeapon.transform.rotation = new Quaternion(Input.mousePosition.x, Input.mousePosition.y, 0, 0).normalized; 
+        //rotation will change depending on the mouse position
 
     }
 }
